@@ -3,10 +3,8 @@ function deepClone(obj) {
     for(let key in obj){
         if(typeof obj[key]!=="object" && typeof obj[key]!=="function"){
             deepClonedObj[key]=obj[key];
-        }else if(obj[key] instanceof Array){
-            deepClonedObj[key]=Object.assign([],obj[key])
-        }else if(obj[key] instanceof Object){
-            deepClonedObj[key]=Object.assign({},obj[key])
+        }else{
+            deepClonedObj[key]=deepClone(obj[key]);
         }
     }
     return deepClonedObj;
