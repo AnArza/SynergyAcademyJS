@@ -45,6 +45,19 @@ function Employee(lastName,salary,birthday,employmentYear){
         }
         return experienceInDays;
     }
+    this.getExperienceInMonths=function(){
+        let experienceInMonths;
+        const birthYear=this.birthday.getFullYear();
+        const birthMonth=this.birthday.getMonth();
+        if(this.getAge()>=65){
+            experienceInMonths=(new Date(birthYear+65,birthMonth).getMonth()-new Date(this.employmentYear,0).getMonth())+
+                                12*(new Date(birthYear+65,birthMonth).getFullYear()-new Date(this.employmentYear,0).getFullYear());
+        }else {
+            experienceInMonths=(new Date().getMonth()-new Date(this.employmentYear,0).getMonth())+
+                            12*(new Date().getFullYear()-new Date(this.employmentYear,0).getFullYear());
+        }
+        return experienceInMonths;
+    }
     this.getDaysUntilRetirement=function(){
         let days;
         const birthYear=this.birthday.getFullYear();
@@ -85,7 +98,7 @@ const Production={
     addEmployee:function(employee){
         if(employee instanceof Employee){
             this.employees.push(employee);
-            this.salarySum+=employee.salary;
+            this.salarySum+=employee.salary*employee.getExperienceInMonths();
             this.monthlySpendings+=employee.salary;
             this.monthlyProfit-=employee.salary;    
         }else console.log("You can add only employees.");
@@ -93,7 +106,7 @@ const Production={
     deleteEmployee:function(employee){
         if(employee instanceof Employee){
             this.employees=this.employees.filter((emp)=>emp!==employee);
-            this.salarySum-=employee.salary;
+            this.salarySum-=employee.salary*employee.getExperienceInMonths();
             this.monthlySpendings-=employee.salary;
             this.monthlyProfit+=employee.salary;
         }else console.log("You can delete only employees.");
