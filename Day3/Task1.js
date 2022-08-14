@@ -11,9 +11,9 @@ function merge(left,right){
     }
     
     if(left.length==0 && right.length!=0){
-        merged.push(...right);
-    } else {
-        merged.push(...left);
+        merged.push(right[0]);
+    } else if(left.length!=0 && right.length==0){
+        merged.push(left[0]);
     }
     return merged;
 }
