@@ -1,15 +1,21 @@
 //Merge Sort
 
 function merge(left,right){
-    let arr=[];
+    let merged=[];
     while(left.length!=0 && right.length!=0){
         if(left[0]<right[0]){
-            arr.push(left.shift());
+            merged.push(left.shift());
         }else{
-            arr.push(right.shift());
+            merged.push(right.shift());
         }
     }
-    return [...arr,...left,...right];
+    
+    if(left.length==0 && right.length!=0){
+        merged.push(...right);
+    } else {
+        merged.push(...left);
+    }
+    return merged;
 }
 
 function mergeSort(arr){
