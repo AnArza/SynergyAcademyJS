@@ -70,6 +70,9 @@ function Employee(lastName,salary,birthday,employmentYear){
         }
         return days;
     }
+    this[Symbol.toPrimitive]=function(hint){
+        return hint == "string" ? `lastName: ${this.lastName}` : this.salary;
+    }
 }
 
 //Testing Employee
@@ -80,10 +83,6 @@ console.log(`Experience: ${ani.getExperience()}`);
 console.log(`Experience in days: ${ani.getExperienceInDays()}`);
 console.log(`Days until retirement: ${ani.getDaysUntilRetirement()}`);
 
-ani[Symbol.toPrimitive]=function(hint){
-    console.log(`hint: ${hint}`);
-    return hint == "string" ? `lastName: ${this.lastName}` : this.salary;
-}
 // alert(ani)
 console.log(+ani)
 
@@ -119,7 +118,6 @@ const Production={
         return sum/this.employees.length;
     },
     [Symbol.toPrimitive]:function(hint){
-        console.log(`hint: ${hint}`);
         return hint == "string" ? `name: ${this.name}` : this.salarySum;
     }
 }
@@ -151,16 +149,69 @@ console.log(`Monthly Spendings: ${Production.monthlySpendings}`)
 
 console.log(+Production)
 
+
+
 //Console application
+const { get } = require('https');
 
 const readline = require('readline');
-readline.emitKeypressEvents(process.stdin);
-process.stdin.setRawMode(true);
-
-process.stdin.on('keypress', (str, key) => {
-    if (key.name === 'q') {
-        process.exit();
-    }
+const rl=readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
 })
 
-console.log("Press Q if you want to quit the program.");
+const ACTIONS=[
+    "Press 1 to add an employee/",
+    "Press 2 to get the list of employees.",
+    "Press 3 to get the average salary of employees.",
+    "Press 4 to see the possible actions.",
+    "Press 0 to quit the program."
+]
+
+for(const action of ACTIONS){
+    console.log(action);
+}
+
+function getAnswer(){
+    rl.question("Enter a number:",(num)=>{
+        handleAnswer(num);
+    })
+}
+getAnswer();
+
+function handleAnswer(num){
+    switch(num){
+        case "1":
+            rl.question("Enter employee last name: ",(lastName)=>{
+                rl.question("Enter employee salary: ",(salary)=>{
+                    rl.question("Enter employee birthday: ",(bday)=>{
+                        rl.question("Enter employment year: ",(year)=>{
+                            Production.addEmployee(new Employee(lastName,Number(salary),new Date(bday),year))
+                            console.log("New employee added")
+                            getAnswer();
+                        })
+                    }) 
+                })
+            })
+            break;
+        case "2":
+            for(const emp of Production.employees){
+                console.log(emp)
+            }
+            getAnswer();
+            break;
+        case "3":
+            console.log(Production.getAvgSalary())
+            getAnswer();
+            break;
+        case "4":
+            for(const action of ACTIONS){
+                console.log(action);
+            }
+            getAnswer();
+            break;
+        case "0":
+            rl.close();
+            process.exit();
+    }
+}
