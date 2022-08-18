@@ -21,19 +21,19 @@ function askCoordinateXfrom(){
 }
 // askCoordinateX()
 function askCoordinateYfrom(){
-        rl.question('Enter the "from" Y coordinate. (between 0 and 9 inclusive)\n', y =>{
-            if(y>9 || y<0){
-                askCoordinateYfrom();
+    rl.question('Enter the "from" Y coordinate. (between 0 and 9 inclusive)\n', y =>{
+        if(y>9 || y<0){
+            askCoordinateYfrom();
+        } else {
+            posYfrom=y;
+            if(board[posYfrom][posXfrom].state=="free"){
+                askCoordinateXfrom();
             } else {
-                posYfrom=y;
-                if(board[posYfrom][posXfrom].state=="free"){
-                    askCoordinateXfrom();
-                } else {
-                    console.log(`Your coordinates ${posXfrom} and ${posYfrom}`)
-                    askCoordinateXto();
-                }
+                console.log(`Your coordinates ${posXfrom} and ${posYfrom}`)
+                askCoordinateXto();
             }
-        })
+        }
+    })
 }
 
 
@@ -50,64 +50,64 @@ function askCoordinateXto(){
 
 
 function askCoordinateYto(){
-        rl.question('Enter the "to" Y coordinate. (between 0 and 9 inclusive)\n', y =>{
-            if(y>9 || y<0){
-                askCoordinateYto();
+    rl.question('Enter the "to" Y coordinate. (between 0 and 9 inclusive)\n', y =>{
+        if(y>9 || y<0){
+            askCoordinateYto();
+        } else {
+            posYto=y;
+            if(board[posYto][posXto].state=="busy"){
+                askCoordinateXto();
             } else {
-                posYto=y;
-                if(board[posYto][posXto].state=="busy"){
-                    askCoordinateXto();
+                console.log(`Your coordinates ${posXto} and ${posYto}`)
+                Xfrom=Number(posXfrom)
+                Yfrom=Number(posYfrom)
+                Xto=Number(posXto)
+                Yto=Number(posYto)
+                let astar = new Astar(board);
+                console.log(astar.search(Xfrom,Yfrom,Xto,Yto))
+                if(astar.search(Xfrom,Yfrom,Xto,Yto)){
+                    let temp;
+                    temp=board[Yfrom][Xfrom].content;
+                    board[Yfrom][Xfrom].emptyLetter();
+                    board[Yto][Xto].state="busy";
+                    board[Yto][Xto].content=temp;
+                    showBoard();
+                    checkLines(Xto,Yto);
+                    checkLines(randomCellsCoordinates[0][0],randomCellsCoordinates[0][1]);
+                    checkLines(randomCellsCoordinates[1][0],randomCellsCoordinates[1][1]);
+                    checkLines(randomCellsCoordinates[2][0],randomCellsCoordinates[2][1]);
+                    console.log(`\nScore: ${score}, Lines Checked`)
+                    showBoard();
+                    if(scoreCopy==score){
+                        randomFreeCells();
+                        console.log(`\nLetters randomly added.`)
+                        showBoard();
+                        askCoordinateXfrom();
+                    } else{
+                        scoreCopy=score;
+                        askCoordinateXfrom();
+                    }
                 } else {
-                    console.log(`Your coordinates ${posXto} and ${posYto}`)
-                    Xfrom=Number(posXfrom)
-                    Yfrom=Number(posYfrom)
-                    Xto=Number(posXto)
-                    Yto=Number(posYto)
-                    let astar = new Astar(board);
-                    console.log(astar.search(Xfrom,Yfrom,Xto,Yto))
-                    if(astar.search(Xfrom,Yfrom,Xto,Yto)){
-                        let temp;
-                        temp=board[Yfrom][Xfrom].content;
-                        board[Yfrom][Xfrom].emptyLetter();
-                        board[Yto][Xto].state="busy";
-                        board[Yto][Xto].content=temp;
-                        showBoard();
-                        checkLines(Xto,Yto);
-                        checkLines(randomCellsCoordinates[0][0],randomCellsCoordinates[0][1]);
-                        checkLines(randomCellsCoordinates[1][0],randomCellsCoordinates[1][1]);
-                        checkLines(randomCellsCoordinates[2][0],randomCellsCoordinates[2][1]);
-                        console.log(`\nScore: ${score}, Lines Checked`)
-                        showBoard();
-                        if(scoreCopy==score){
-                            randomFreeCells();
-                            console.log(`\nLetters randomly added.`)
-                            showBoard();
-                            askCoordinateXfrom();
-                        } else{
-                            scoreCopy=score;
-                            askCoordinateXfrom();
-                        }
-                    } else {
-                        let freeCells=0;
-                        for(let i=0;i<board.length;i++){
-                            for(let j=0;j<board[0].length;j++){
-                                if(board[i][j].content="*"){
-                                    freeCells++;
-                                } 
-
+                    let freeCells=0;
+                    for(let i=0;i<board.length;i++){
+                        for(let j=0;j<board[0].length;j++){
+                            if(board[i][j].content="*"){
+                                freeCells++;
                             }
+
                         }
-                        if(freeCells<=1){
-                            console.log("The Game is Over");
-                            process.exit();
-                        }else{
-                            console.log("No path found. Choose another coordinates.");
-                            askCoordinateXfrom();
-                        }
+                    }
+                    if(freeCells<=1){
+                        console.log("The Game is Over");
+                        process.exit();
+                    }else{
+                        console.log("No path found. Choose another coordinates.");
+                        askCoordinateXfrom();
                     }
                 }
             }
-        })
+        }
+    })
 }
 
 
@@ -136,7 +136,7 @@ function randomFreeCells(){
 
             }
         }
-        generateRandomCell(); 
+        generateRandomCell();
     }
 }
 
@@ -186,7 +186,7 @@ function Astar(board){
         while(openList.length!=0){
             let lowInd=0;
             for(let i=0;i<openList.length;i++) {
-                if(openList[i].f < openList[lowInd].f){ 
+                if(openList[i].f < openList[lowInd].f){
                     lowInd = i;
                 }
             }
@@ -196,16 +196,16 @@ function Astar(board){
                 return true;
             }
             openList.splice(lowInd, 1);
-			current.closed = true;
+            current.closed = true;
 
             let neighbors = [];
-			let	x = current.x;
-			let	y = current.y;
+            let	x = current.x;
+            let	y = current.y;
 
-			if(y-1>=0){neighbors.push(grid[y-1][x]);}
-			if(y+1<board.length){neighbors.push(grid[y+1][x]);}
-			if(x-1>=0){neighbors.push(grid[y][x-1]);}
-			if(x+1<board.length){neighbors.push(grid[y][x+1]);}
+            if(y-1>=0){neighbors.push(grid[y-1][x]);}
+            if(y+1<board.length){neighbors.push(grid[y+1][x]);}
+            if(x-1>=0){neighbors.push(grid[y][x-1]);}
+            if(x+1<board.length){neighbors.push(grid[y][x+1]);}
 
             for(let neighbor of neighbors){
 
@@ -215,7 +215,7 @@ function Astar(board){
 
                 let g = current.g+1;
                 let gIsBest = false;
-                
+
                 if( !isOpened(neighbor)){
                     gIsBest = true;
                     neighbor.h = Math.abs(neighbor.x-posXto) + Math.abs(neighbor.y-posYto);
@@ -251,6 +251,8 @@ function Astar(board){
 }
 
 function checkLines(x,y){
+    let oldScore=score;
+
     let horizontal
     let horizontal_first=[]
     let horizontal_second=[]
@@ -296,10 +298,10 @@ function checkLines(x,y){
             right_diagonal_second.push([board[y-i][x+i],x+i,y-i])
         }
     }
-    horizontal=[...horizontal_first,...horizontal_second]
-    vertical=[...vertical_first,...vertical_second]
-    left_diagonal=[...left_diagonal_first,...left_diagonal_second]
-    right_diagonal=[...right_diagonal_first,...right_diagonal_second]
+    horizontal=[...horizontal_first.reverse(),...horizontal_second]
+    vertical=[...vertical_first.reverse(),...vertical_second]
+    left_diagonal=[...left_diagonal_first.reverse(),...left_diagonal_second]
+    right_diagonal=[...right_diagonal_first.reverse(),...right_diagonal_second]
 
     if(horizontal.length<4){
         horizontal=[]
@@ -314,17 +316,15 @@ function checkLines(x,y){
         right_diagonal=[]
     }
 
-    let oldScore=score;
-    
-    let lines=[[...horizontal],[...vertical],[...left_diagonal],[...right_diagonal]]
 
+    let lines=[[...horizontal],[...vertical],[...left_diagonal],[...right_diagonal]]
 
     for(let k=0;k<lines.length;k++){
         if(lines[k].length!=0){
             let count=0;
             let counts=[]
             let indexes=[]
-            for(i=0;i<lines[k].length;i++){
+            for(let i=0;i<lines[k].length;i++){
                 if(lines[k][i][0].content==board[y][x].content && board[y][x].content!="*"){
                     count++;
                 } else{
@@ -335,8 +335,11 @@ function checkLines(x,y){
             }
             if(counts.length==0){
                 counts.push(count)
-                indexes.push(i)
+                indexes.push(count)
                 count=0;
+            } else {
+                counts.push(count)
+                indexes.push(lines[k].length)
             }
             if(Math.max(...counts)>=4){
                 for(let i=indexes[counts.indexOf(Math.max(...counts))]-Math.max(...counts);i<indexes[counts.indexOf(Math.max(...counts))];i++){
@@ -349,11 +352,9 @@ function checkLines(x,y){
 
     if(oldScore!=score){
         board[y][x].emptyLetter();
-        oldScore=score;
     }
 }
 
 randomFreeCells();
 showBoard();
-
 askCoordinateXfrom();
