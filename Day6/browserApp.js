@@ -51,10 +51,10 @@ function Employee(lastName,salary,birthday,employmentYear){
         const birthMonth=this.birthday.getMonth();
         if(this.getAge()>=65){
             experienceInMonths=(new Date(birthYear+65,birthMonth).getMonth()-new Date(this.employmentYear,0).getMonth())+
-                                12*(new Date(birthYear+65,birthMonth).getFullYear()-new Date(this.employmentYear,0).getFullYear());
+                12*(new Date(birthYear+65,birthMonth).getFullYear()-new Date(this.employmentYear,0).getFullYear());
         }else {
             experienceInMonths=(new Date().getMonth()-new Date(this.employmentYear,0).getMonth())+
-                            12*(new Date().getFullYear()-new Date(this.employmentYear,0).getFullYear());
+                12*(new Date().getFullYear()-new Date(this.employmentYear,0).getFullYear());
         }
         return experienceInMonths;
     }
@@ -89,7 +89,7 @@ const Production={
             this.employees.push(employee);
             this.salarySum+=employee.salary*employee.getExperienceInMonths();
             this.monthlySpendings+=employee.salary;
-            this.monthlyProfit-=employee.salary;    
+            this.monthlyProfit-=employee.salary;
         }else console.log("You can add only employees.");
     },
     deleteEmployee:function(employee){
@@ -138,7 +138,7 @@ for(const action of ACTIONS){
 function getAnswer(){
     let numAnswer=prompt("Enter a number");
     if(numAnswer){
-        handleAnswer(numAnswer)  
+        handleAnswer(numAnswer)
     }
 }
 
@@ -160,7 +160,12 @@ function createHeaderCell(prop){
 function addRow(emp){
     let row=document.createElement("tr")
     for(const prop in emp){
-        row.append(createCell(emp[prop]))
+        if(typeof emp[prop]=="function"){
+            row.append(createCell(emp[prop]()))
+        }
+        else{
+            row.append(createCell(emp[prop]))
+        }
     }
     table.append(row);
 }
