@@ -1,0 +1,68 @@
+body{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#board{
+    width: 600px;
+    height: 600px;
+    background-color: #000;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+}
+#board div{
+    width: 50px;
+    height: 50px;
+}
+#board .no-color{
+    background-color: rgb(255, 241, 47);
+}
+#board .red{
+    background-color: red;
+    border-radius: 50%;
+}
+#board .blue{
+    background-color: blue;
+    border-radius: 50%;
+}
+#board .green{
+    background-color: green;
+    border-radius: 50%;
+}
+#board .purple{
+    background-color: purple;
+    border-radius: 50%;
+}
+#board .tan{
+    background-color: tan;
+    border-radius: 50%;
+}
+#board .white{
+    background-color: white;
+    border-radius: 50%;
+}
+#board .gray{
+    background-color: gray;
+    border-radius: 50%;
+}
+
+#board .clicked{
+    position: relative;
+    top: -10px;
+}
+
+#score {
+    position: absolute;
+    left: 30px;
+    height: 50px;
+    width: 200px;
+    border: 3px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
